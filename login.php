@@ -11,34 +11,12 @@
 <body class="text-center">
     <?php
     $notif = null;
-    if (isset($_POST['username']) && isset($_POST['password'])) {
-
-        session_start();
-        $user = $_POST['username'];
-        $pass = $_POST['password'];
-        $pdo = pdo_connect();
-        $stmt = $pdo->prepare('SELECT salt FROM users WHERE username = :user LIMIT 1');
-        $stmt->bindParam(':user', $user);
-        $stmt->execute();
-        $salt = $stmt->fetchColumn();
-        
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE username = :user AND password = :password LIMIT 1');
-        $stmt->bindParam(':user', $user);
-        $stmt->bindParam(':password', $password);
-        $password = hash('sha256', $pass . $salt);
-        $stmt->execute();
-        $notif = $stmt->rowCount();
-        if ($stmt->rowCount() > 0) {
-            $_SESSION['user'] = $user;
-	        $_SESSION['token'] = md5(uniqid(mt_rand(), true));
-            header("location: index.php");
-        } else {
-            $notif = "Wrong usename or password";
-        }
-    }
+    session_start();
+    
+    $_SESSION['token'] = md5(uniqid(mt_rand(), true));
 
     ?>
-    <form class="form-signin" method="POST">
+    <form class="form-signin" action="post.php" method="POST">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="username" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
@@ -56,4 +34,4 @@
     </form>
 </body>
 
-</html>
+</html> 

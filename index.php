@@ -1,10 +1,9 @@
 <?php
 include "functions.php";
 session_start();
-$token = filter_input(INPUT_POST, 'token', FILTER_UNSAFE_RAW);
-// var_dump($_SESSION['user']);
-if (!isset($_SESSION['user']) && (!$token || $token !== $_SESSION['token'])) {
-    header("location: login.php");
+
+if (!isset($_SESSION['user']) || !isset($_SESSION['token'])) {
+	header("location: login.php");
 } else {
     $pdo = pdo_connect();
     $stmt = $pdo->prepare('SELECT * FROM contacts');
